@@ -48,28 +48,28 @@ public class MainActivity extends AppCompatActivity {
         toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
         fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
 
-        List<String> spinnerArray = new ArrayList<String>();
+        List<String> spinnerList = new ArrayList<String>();
         for (Map.Entry<String, Currency> entry: allCurrency.entrySet()){
 
-            spinnerArray.add(entry.getValue().getSpinnerText());
+            spinnerList.add(entry.getValue().getSpinnerText());
         }
 
-        java.util.Collections.sort(spinnerArray);
+        java.util.Collections.sort(spinnerList);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinnerArray
+                this, android.R.layout.simple_spinner_item, spinnerList
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fromCurrencySpinner.setAdapter(adapter);
         toCurrencySpinner.setAdapter(adapter);
     }
 
-//    private class getrates extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            return null;
-//        }
-//    }
+    private class getrates extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+    }
 
     private void createCurrency()  {
 
