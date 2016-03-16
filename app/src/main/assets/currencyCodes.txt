@@ -29,7 +29,6 @@ CLP	Chile Peso
 CNY	China Yuan Renminbi
 COP	Colombia Peso
 CRC	Costa Rica Colon
-CUC	Cuba Convertible Peso
 CUP	Cuba Peso
 CVE	Cape Verde Escudo
 CZK	Czech Republic Koruna
@@ -45,7 +44,6 @@ FJD	Fiji Dollar
 FKP	Falkland Islands (Malvinas) Pound
 GBP	United Kingdom Pound
 GEL	Georgia Lari
-GGP	Guernsey Pound
 GHS	Ghana Cedi
 GIP	Gibraltar Pound
 GMD	Gambia Dalasi
@@ -64,7 +62,6 @@ INR	India Rupee
 IQD	Iraq Dinar
 IRR	Iran Rial
 ISK	Iceland Krona
-JEP	Jersey Pound
 JMD	Jamaica Dollar
 JOD	Jordan Dinar
 JPY	Japan Yen
@@ -125,7 +122,6 @@ SGD	Singapore Dollar
 SHP	Saint Helena Pound
 SLL	Sierra Leone Leone
 SOS	Somalia Shilling
-SPL	Seborga Luigino
 SRD	Suriname Dollar
 STD	São Tomé and Príncipe Dobra
 SVC	El Salvador Colon
@@ -138,7 +134,6 @@ TND	Tunisia Dinar
 TOP	Tonga Pa'anga
 TRY	Turkey Lira
 TTD	Trinidad and Tobago Dollar
-TVD	Tuvalu Dollar
 TWD	Taiwan New Dollar
 TZS	Tanzania Shilling
 UAH	Ukraine Hryvnia
@@ -154,4 +149,3 @@ XCD	East Caribbean Dollar
 YER	Yemen Rial
 ZAR	South Africa Rand
 ZMW	Zambia Kwacha
-ZWD	Zimbabwe Dollar

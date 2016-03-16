@@ -3,24 +3,18 @@ package com.example.aldairpetronilia.currencyconverter;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +23,11 @@ import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final String ratesApi = "http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=USD";
     Map<String, Currency> allCurrency = new HashMap<String, Currency>();
     Spinner toCurrencySpinner;
     Spinner fromCurrencySpinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         createCurrency();
         loadSpinners();
-        //getrates.execute();
+        getRates getRates;
+        new getRates().execute(ratesApi);
     }
 
     private void loadSpinners() {
@@ -63,10 +60,36 @@ public class MainActivity extends AppCompatActivity {
         toCurrencySpinner.setAdapter(adapter);
     }
 
-    private class getrates extends AsyncTask<Void, Void, Void> {
+    private class getRates extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            for (Map.Entry<String, Currency> entry : allCurrency.entrySet()) {
+
+                try {
+                    URL url = null;
+
+                    if (!(entry.getKey().equals("USD"))) {
+
+                        url = new URL(params[0] + entry.getValue().getCurrencyCode() + "=X");
+
+                    }
+
+                    if (url != null) {
+
+                        Scanner scanner = new Scanner(url.openStream());
+                        String nextLine = scanner.nextLine();
+                        nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
+                        entry.getValue().setRate(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
             return null;
         }
     }
