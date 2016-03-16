@@ -64,5 +64,10 @@ public class Currency {
         this.currencySymbol = currencySymbol;
     }
 
+    public String getSpinnerText(){
+
+        return "(" + currencyCode + ") " + currencyName ;
+    }
+
 
 }

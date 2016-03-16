@@ -1,6 +1,7 @@
 package com.example.aldairpetronilia.currencyconverter;
 
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.io.BufferedReader;
@@ -19,13 +21,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     Map<String, Currency> allCurrency = new HashMap<String, Currency>();
+    Spinner toCurrencySpinner;
+    Spinner fromCurrencySpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,36 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         createCurrency();
+        loadSpinners();
+        //getrates.execute();
     }
+
+    private void loadSpinners() {
+        toCurrencySpinner = (Spinner) findViewById(R.id.toCurrencySpinner);
+        fromCurrencySpinner = (Spinner) findViewById(R.id.fromCurrencySpinner);
+
+        List<String> spinnerArray = new ArrayList<String>();
+        for (Map.Entry<String, Currency> entry: allCurrency.entrySet()){
+
+            spinnerArray.add(entry.getValue().getSpinnerText());
+        }
+
+        java.util.Collections.sort(spinnerArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, spinnerArray
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fromCurrencySpinner.setAdapter(adapter);
+        toCurrencySpinner.setAdapter(adapter);
+    }
+
+//    private class getrates extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            return null;
+//        }
+//    }
 
     private void createCurrency()  {
 
