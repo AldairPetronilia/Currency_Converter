@@ -17,8 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -33,21 +36,23 @@ public class MainActivity extends AppCompatActivity {
     Map<String, Currency> allCurrency = new HashMap<String, Currency>();
     Spinner toCurrencySpinner;
     Spinner fromCurrencySpinner;
+    EditText currencyAmount;
+    double convertedAmount;
+    Double currencyAmountDouble;
+    TextView convertedAmountText;
 
     public void convertCurrency(View view){
 
         Log.i("info", "Button Pressed");
         Button convertButton = (Button) findViewById(R.id.convertButton);
-        EditText currencyAmount = (EditText) findViewById(R.id.currencyEditText);
-        TextView convertedAmountText = (TextView) findViewById(R.id.conversionTextView);
+        currencyAmount = (EditText) findViewById(R.id.currencyEditText);
+        convertedAmountText = (TextView) findViewById(R.id.conversionTextView);
         String fromCurrencyText = fromCurrencySpinner.getSelectedItem().toString();
         String toCurrencyText = toCurrencySpinner.getSelectedItem().toString();
         Currency fromCurrency = allCurrency.get(fromCurrencyText.substring(1, 4));
         Currency toCurrency = allCurrency.get(toCurrencyText.substring(1, 4));
 
-        double convertedAmount;
-
-        Double currencyAmountDouble = Double.parseDouble(currencyAmount.getText().toString());
+        currencyAmountDouble = Double.parseDouble(currencyAmount.getText().toString());
 
         if (currencyAmountDouble.isNaN()) {
 
@@ -55,12 +60,15 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (fromCurrency.getRate() == 0 || toCurrency.getRate() == 0) {
 
-            Toast.makeText(getApplicationContext(),"Rates Not Loaded", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Rates Loading", Toast.LENGTH_SHORT).show();
+
+            new Test().execute(fromCurrency, toCurrency);
+
 
         } else {
-            System.out.println("Running");
             convertedAmount = currencyAmountDouble / fromCurrency.getRate() * toCurrency.getRate();
             DecimalFormat df = new DecimalFormat("#.###");
+            assert convertedAmountText != null;
             convertedAmountText.setText(df.format(convertedAmount));
 
         }
@@ -68,6 +76,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private class Test extends AsyncTask<Currency, Void, Void>{
+
+
+        @Override
+        protected Void doInBackground(Currency... params) {
+            double fromCurrencyRate = 0;
+            double toCurrencyRate = 0;
+
+            try {
+                URL url = new URL(ratesApi + params[0].getCurrencyCode() + "=X");
+                Scanner scanner = new Scanner(url.openStream());
+                String nextLine = scanner.nextLine();
+                nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
+                fromCurrencyRate = Double.parseDouble(nextLine.substring(0, nextLine.indexOf(",")));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                URL url = new URL(ratesApi + params[1].getCurrencyCode() + "=X");
+                Scanner scanner = new Scanner(url.openStream());
+                String nextLine = scanner.nextLine();
+                nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
+                toCurrencyRate = Double.parseDouble(nextLine.substring(0, nextLine.indexOf(",")));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            convertedAmount = currencyAmountDouble / fromCurrencyRate * toCurrencyRate;
+            publishProgress();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            DecimalFormat df = new DecimalFormat("#.###");
+            assert convertedAmountText != null;
+            convertedAmountText.setText(df.format(convertedAmount));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         Scanner scanner = new Scanner(url.openStream());
                         String nextLine = scanner.nextLine();
                         nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
-                        System.out.println(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
                         entry.getValue().setRate(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
                     }
 

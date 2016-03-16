@@ -85,7 +85,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/conversionTextView"
         android:textSize="30sp"
-        android:text="Test"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
