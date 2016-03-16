@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         Scanner scanner = new Scanner(url.openStream());
                         String nextLine = scanner.nextLine();
                         nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
+                        System.out.println(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
                         entry.getValue().setRate(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
                     }
 
