@@ -74,7 +74,8 @@
         android:text="Convert"
         android:id="@+id/convertButton"
         android:layout_below="@+id/currencyEditText"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="convertCurrency" />
 
     <TextView
         android:layout_width="fill_parent"

@@ -8,13 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +33,40 @@ public class MainActivity extends AppCompatActivity {
     Map<String, Currency> allCurrency = new HashMap<String, Currency>();
     Spinner toCurrencySpinner;
     Spinner fromCurrencySpinner;
+
+    public void convertCurrency(View view){
+
+        Log.i("info", "Button Pressed");
+        Button convertButton = (Button) findViewById(R.id.convertButton);
+        EditText currencyAmount = (EditText) findViewById(R.id.currencyEditText);
+        TextView convertedAmountText = (TextView) findViewById(R.id.conversionTextView);
+        String fromCurrencyText = fromCurrencySpinner.getSelectedItem().toString();
+        String toCurrencyText = toCurrencySpinner.getSelectedItem().toString();
+        Currency fromCurrency = allCurrency.get(fromCurrencyText.substring(1, 4));
+        Currency toCurrency = allCurrency.get(toCurrencyText.substring(1, 4));
+
+        double convertedAmount;
+
+        Double currencyAmountDouble = Double.parseDouble(currencyAmount.getText().toString());
+
+        if (currencyAmountDouble.isNaN()) {
+
+            Toast.makeText(getApplicationContext(),"Please Enter a Number", Toast.LENGTH_LONG).show();
+
+        } else if (fromCurrency.getRate() == 0 || toCurrency.getRate() == 0) {
+
+            Toast.makeText(getApplicationContext(),"Rates Not Loaded", Toast.LENGTH_LONG).show();
+
+        } else {
+            System.out.println("Running");
+            convertedAmount = currencyAmountDouble / fromCurrency.getRate() * toCurrency.getRate();
+            DecimalFormat df = new DecimalFormat("#.###");
+            convertedAmountText.setText(df.format(convertedAmount));
+
+        }
+
+
+    }
 
 
     @Override
@@ -129,11 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

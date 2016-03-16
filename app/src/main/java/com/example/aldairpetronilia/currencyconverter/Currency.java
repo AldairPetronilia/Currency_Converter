@@ -8,7 +8,7 @@ public class Currency {
 
     private String currencyCode;
     private String currencyName;
-    private double rate;
+    private double rate = 0;
     private String currencySymbol;
 
     public Currency(String currencyCode, String currencyName) {
