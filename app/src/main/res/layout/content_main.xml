@@ -12,8 +12,76 @@
     tools:context="com.example.aldairpetronilia.currencyconverter.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:id="@+id/currencyImageView"
+        android:src="@drawable/currency"
+        android:cropToPadding="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:layout_alignParentEnd="true" />
+
     <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="From"
+        android:id="@+id/fromTextView"
+        android:layout_below="@+id/currencyImageView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp" />
+
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fromCurrencySpinner"
+        android:layout_below="@+id/fromTextView"
+        android:layout_alignStart="@+id/fromTextView" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="To"
+        android:id="@+id/toTextView"
+        android:textSize="20sp"
+        android:layout_below="@+id/fromCurrencySpinner"
+        android:layout_alignStart="@+id/fromCurrencySpinner"
+        android:layout_marginTop="5dp" />
+
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toCurrencySpinner"
+        android:layout_below="@+id/toTextView"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/currencyEditText"
+        android:layout_below="@+id/toCurrencySpinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:hint="Please enter your amount"
+        android:textAlignment="center" />
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Convert"
+        android:id="@+id/convertButton"
+        android:layout_below="@+id/currencyEditText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/conversionTextView"
+        android:layout_marginTop="45dp"
+        android:layout_below="@+id/convertButton"
+        android:layout_alignStart="@+id/currencyEditText"
+        android:textSize="30sp" />
 </RelativeLayout>
