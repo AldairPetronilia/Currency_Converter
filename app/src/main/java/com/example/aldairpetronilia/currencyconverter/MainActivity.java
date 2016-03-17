@@ -33,6 +33,7 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
 
     static final String ratesApi = "http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=USD";
+    static final String ratesApiV2 = "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote";
     Map<String, Currency> allCurrency = new HashMap<String, Currency>();
     Spinner toCurrencySpinner;
     Spinner fromCurrencySpinner;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         createCurrency();
         loadSpinners();
         getRates getRates;
-        new getRates().execute(ratesApi);
+        new getRates().execute(ratesApiV2);
     }
 
     private void loadSpinners() {
@@ -154,31 +155,57 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... params) {
-            for (Map.Entry<String, Currency> entry : allCurrency.entrySet()) {
 
-                try {
-                    URL url = null;
+            try {
+                URL url = new URL(params[0]);
+                Scanner scanner = new Scanner(url.openStream());
+                String nextLine;
+                while (scanner.hasNextLine()){
+                    nextLine = scanner.nextLine();
+                    if (nextLine.contains("USD")){
+                        if (nextLine.indexOf("USD/") != -1) {
 
-                    if (!(entry.getKey().equals("USD"))) {
+                            if (allCurrency.containsKey(nextLine.substring(nextLine.indexOf("USD/")+4,nextLine.indexOf("USD/")+7))) {
+                                String next = scanner.nextLine();
+                                allCurrency.get(nextLine.substring(nextLine.indexOf("USD/") + 4, nextLine.indexOf("USD/")+7)).setRate(Double.parseDouble(next.substring(next.indexOf(">") + 1, next.indexOf("</"))));
+                            }
 
-                        url = new URL(params[0] + entry.getValue().getCurrencyCode() + "=X");
+                        }
 
                     }
-
-                    if (url != null) {
-
-                        Scanner scanner = new Scanner(url.openStream());
-                        String nextLine = scanner.nextLine();
-                        nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
-                        entry.getValue().setRate(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                allCurrency.get("USD").setRate(1.00);
             }
+
+//            for (Map.Entry<String, Currency> entry : allCurrency.entrySet()) {
+//
+//                try {
+//                    URL url = null;
+//
+//                    if (!(entry.getKey().equals("USD"))) {
+//
+//                        url = new URL(params[0] + entry.getValue().getCurrencyCode() + "=X");
+//
+//                    }
+//
+//                    if (url != null) {
+//
+//                        Scanner scanner = new Scanner(url.openStream());
+//                        String nextLine = scanner.nextLine();
+//                        nextLine = nextLine.substring(nextLine.indexOf(",") + 1);
+//                        entry.getValue().setRate(Double.parseDouble(nextLine.substring(0, nextLine.indexOf(","))));
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
 
             return null;
         }
